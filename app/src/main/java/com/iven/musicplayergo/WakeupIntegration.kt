@@ -231,6 +231,7 @@ object WakeupIntegration {
 
         audioRecord?.startRecording()
         LogOutputHelper.print("▶ AudioRecord 开始录音", ChatMessage.Sender.BOT)
+        logD("▶ AudioRecord 开始录音")
 
         recordThread = Thread {
             val buf = ByteArray(frame)
@@ -361,6 +362,8 @@ class WakeupService : Service() {
         if (!isBtMic) {
             Log.w("WakeupFix", "⚠️ 蓝牙耳机未作为输入，可能影响唤醒识别")
             LogOutputHelper.print("⚠️ 蓝牙耳机未作为输入，可能影响唤醒识别", ChatMessage.Sender.BOT)
+        }else{
+            LogOutputHelper.print("⚠️ 蓝牙耳机作为输入, ChatMessage.Sender.BOT)
         }
 
         // ② 启动前台服务
@@ -374,15 +377,6 @@ class WakeupService : Service() {
             getString(R.string.apiSecret),
             getString(R.string.workDir)
         )
-//        BluetoothScoHelper.waitForBluetoothSco(this) {
-//            WakeupIntegration.ensureInitialized(
-//                this,
-//                getString(R.string.appId),
-//                getString(R.string.apiKey),
-//                getString(R.string.apiSecret),
-//                getString(R.string.workDir)
-//            )
-//        }
 
         /* ③ 等播放器扫描完再启动唤醒，避免 I/O 竞争 */
         LocalBroadcastManager.getInstance(this)

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
+import android.Manifest
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
@@ -326,6 +327,11 @@ class MainActivity : BaseActivity(), UIControlInterface, MediaControlInterface {
             )
             .request { grantedList, allGranted ->
                 if (allGranted) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        if (checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                            requestPermissions(arrayOf(Manifest.permission.BLUETOOTH_CONNECT), 1001)
+                        }
+                    }
 
 //                    VoiceRecognizer.init(context ?: return)
                     BluetoothScoHelper.init(applicationContext)
